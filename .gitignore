@@ -1,0 +1,17 @@
+# 编译产物
+*.o
+*.out
+c-language/hello
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
