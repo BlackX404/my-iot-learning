@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  roslander-sim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: roslander-sim:noetic
+    container_name: roslander_sim
+    hostname: roslander-sim
+    network_mode: host
+    privileged: true
+    runtime: nvidia
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - LIBGL_ALWAYS_SOFTWARE=0
+    volumes:
+      # X11 socket for GUI
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # PulseAudio for sound
+      - /run/user/1000/pulse:/run/user/1000/pulse:ro
+      # 源码挂载（只读）
+      - ../ros_ws/src:/root/ros_ws/src:ro
+      # 场景文件挂载（只读）
+      - ../scenes:/root/scenes:ro
+      # 编译产物（读写，独立volume避免污染宿主机）
+      - roslander_build:/root/ros_ws/build
+      - roslander_devel:/root/ros_ws/devel
+      - roslander_logs:/root/ros_ws/logs
+      # 共享 Gazebo 缓存
+      - ~/.gazebo:/root/.gazebo
+    stdin_open: true
+    tty: true
+
+volumes:
+  roslander_build:
+  roslander_devel:
+  roslander_logs:

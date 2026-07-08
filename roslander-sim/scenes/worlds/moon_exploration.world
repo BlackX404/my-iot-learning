@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ROSLander 月球探索比赛场景
+  场地: 3.92m × 2.16m
+  围挡高度: 500mm
+  参考: 第28届CRAIC机器人任务挑战赛（复合机器人月球探索）线上比赛规则
+-->
+<sdf version="1.6">
+  <world name="moon_exploration">
+
+    <!-- ============================================ -->
+    <!-- 物理参数                                     -->
+    <!-- ============================================ -->
+    <physics type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+      <gravity>0 0 -9.81</gravity>
+    </physics>
+
+    <!-- ============================================ -->
+    <!-- 光照（模拟月球环境）                          -->
+    <!-- ============================================ -->
+    <scene>
+      <ambient>0.3 0.3 0.35 1.0</ambient>
+      <background>0.05 0.05 0.1 1.0</background>
+      <shadows>true</shadows>
+    </scene>
+
+    <!-- 太阳光 -->
+    <light name="sun" type="directional">
+      <pose>5 5 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.85 1</diffuse>
+      <specular>0.3 0.3 0.35 1</specular>
+      <direction>-0.5 -0.5 -1</direction>
+      <cast_shadows>true</cast_shadows>
+    </light>
+
+    <!-- ============================================ -->
+    <!-- 地面 - 月球表面                              -->
+    <!-- ============================================ -->
+    <model name="moon_ground">
+      <static>true</static>
+      <pose>0 0 0 0 0 0</pose>
+      <link name="ground_link">
+        <collision name="ground_collision">
+          <geometry>
+            <box>
+              <size>4.0 2.3 0.02</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>0.8</mu>
+                <mu2>0.8</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <visual name="ground_visual">
+          <geometry>
+            <box>
+              <size>4.0 2.3 0.02</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.48 0.45 1</ambient>
+            <diffuse>0.6 0.58 0.55 1</diffuse>
+            <specular>0.1 0.1 0.1 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================ -->
+    <!-- 月球探索地图（无纺布 - 视觉标记）            -->
+    <!-- ============================================ -->
+    <model name="moon_map">
+      <static>true</static>
+      <pose>0 0 0.021 0 0 0</pose>
+      <link name="map_link">
+        <visual name="map_visual">
+          <geometry>
+            <box>
+              <size>3.92 2.16 0.001</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.35 0.35 0.4 1</ambient>
+            <diffuse>0.45 0.45 0.5 1</diffuse>
+            <specular>0.05 0.05 0.05 1</specular>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================ -->
+    <!-- 围挡 - 扁铝型材 (500mm高)                    -->
+    <!-- ============================================ -->
+    <!-- 长边1 (X: -1.96, Y: -1.08 to 1.08) -->
+    <model name="wall_left">
+      <static>true</static>
+      <pose>-1.96 0 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.02 2.16 0.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.02 2.16 0.5</size></box></geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 长边2 -->
+    <model name="wall_right">
+      <static>true</static>
+      <pose>1.96 0 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.02 2.16 0.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.02 2.16 0.5</size></box></geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 短边1 -->
+    <model name="wall_top">
+      <static>true</static>
+      <pose>0 1.08 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>3.92 0.02 0.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>3.92 0.02 0.5</size></box></geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 短边2 -->
+    <model name="wall_bottom">
+      <static>true</static>
+      <pose>0 -1.08 0.25 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>3.92 0.02 0.5</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>3.92 0.02 0.5</size></box></geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================ -->
+    <!-- 道具区：以下道具的具体位置根据比赛俯视图估算  -->
+    <!-- 用户需根据实际地图在 Gazebo 中微调           -->
+    <!-- ============================================ -->
+
+    <!-- ---- 月球基地（斜坡平台）837×400×105mm ---- -->
+    <!-- 放在场地一侧，机器人出发位置 -->
+    <model name="moon_base">
+      <static>true</static>
+      <pose>-1.35 0 0.0525 0 0 -1.5708</pose>
+      <link name="base_link">
+        <collision name="collision">
+          <geometry><box><size>0.837 0.4 0.105</size></box></geometry>
+          <surface>
+            <friction><ode><mu>0.6</mu><mu2>0.6</mu2></ode></friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.837 0.4 0.105</size></box></geometry>
+          <material>
+            <ambient>0.4 0.4 0.45 1</ambient>
+            <diffuse>0.5 0.5 0.55 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 斜坡（放在月球基地下方） -->
+    <model name="moon_base_ramp">
+      <static>true</static>
+      <pose>-1.35 -0.4 0.03 0.2 0 0</pose>
+      <link name="ramp_link">
+        <collision name="collision">
+          <geometry><box><size>0.837 0.3 0.05</size></box></geometry>
+          <surface>
+            <friction><ode><mu>0.7</mu><mu2>0.7</mu2></ode></friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.837 0.3 0.05</size></box></geometry>
+          <material>
+            <ambient>0.5 0.5 0.55 1</ambient>
+            <diffuse>0.6 0.6 0.65 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ---- 月球资源库（收纳盒）148×148×50mm ---- -->
+    <model name="storage_box">
+      <static>true</static>
+      <pose>1.35 0.5 0.025 0 0 0</pose>
+      <link name="box_link">
+        <collision name="collision">
+          <geometry><box><size>0.148 0.148 0.05</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.148 0.148 0.05</size></box></geometry>
+          <material>
+            <ambient>0.8 0.2 0.2 1</ambient>
+            <diffuse>0.85 0.25 0.25 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ---- 固定障碍物（360×360×360mm）3个 ---- -->
+    <model name="fixed_obstacle_1">
+      <static>true</static>
+      <pose>-0.3 -0.5 0.18 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+          <material>
+            <ambient>1 0.8 0.2 1</ambient>
+            <diffuse>1 0.85 0.3 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="fixed_obstacle_2">
+      <static>true</static>
+      <pose>0.3 -0.5 0.18 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+          <material>
+            <ambient>1 0.8 0.2 1</ambient>
+            <diffuse>1 0.85 0.3 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="fixed_obstacle_3">
+      <static>true</static>
+      <pose>0 0 0.18 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+          <material>
+            <ambient>1 0.8 0.2 1</ambient>
+            <diffuse>1 0.85 0.3 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ---- 随机障碍物位置（数字格1-5，示例2个） ---- -->
+    <model name="random_obstacle_1">
+      <static>true</static>
+      <pose>-0.8 0.5 0.18 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+          <material>
+            <ambient>1 0.8 0.2 1</ambient>
+            <diffuse>1 0.85 0.3 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="random_obstacle_2">
+      <static>true</static>
+      <pose>0.8 0.5 0.18 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.36 0.36 0.36</size></box></geometry>
+          <material>
+            <ambient>1 0.8 0.2 1</ambient>
+            <diffuse>1 0.85 0.3 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ---- 矿石采集平台（EVA方块）230×140×70mm 2个 ---- -->
+    <model name="ore_platform_1">
+      <static>true</static>
+      <pose>-0.5 0.65 0.035 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.23 0.14 0.07</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.23 0.14 0.07</size></box></geometry>
+          <material>
+            <ambient>1 0.5 0.1 1</ambient>
+            <diffuse>1 0.55 0.15 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="ore_platform_2">
+      <static>true</static>
+      <pose>0.5 0.65 0.035 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.23 0.14 0.07</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.23 0.14 0.07</size></box></geometry>
+          <material>
+            <ambient>1 0.5 0.1 1</ambient>
+            <diffuse>1 0.55 0.15 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ---- 矿石道具：平台1 ---- -->
+    <!-- 正方体 30×30×30mm -->
+    <model name="ore_cube_1">
+      <static>false</static>
+      <pose>-0.5 0.65 0.1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.03 0.03 0.03</size></box></geometry>
+          <surface>
+            <friction><ode><mu>0.6</mu><mu2>0.6</mu2></ode></friction>
+          </surface>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.03 0.03 0.03</size></box></geometry>
+          <material>
+            <ambient>0.3 0.5 0.3 1</ambient>
+            <diffuse>0.35 0.55 0.35 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 长方体 30×30×60mm -->
+    <model name="ore_cuboid_1">
+      <static>false</static>
+      <pose>-0.5 0.58 0.1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.06 0.03 0.03</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.06 0.03 0.03</size></box></geometry>
+          <material>
+            <ambient>0.5 0.5 0.3 1</ambient>
+            <diffuse>0.55 0.55 0.35 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 圆柱体 直径30mm 高45mm -->
+    <model name="ore_cylinder_1">
+      <static>false</static>
+      <pose>-0.5 0.72 0.1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.015</radius><length>0.045</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.015</radius><length>0.045</length></cylinder></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.35 0.35 0.55 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ---- 矿石道具：平台2 ---- -->
+    <model name="ore_cube_2">
+      <static>false</static>
+      <pose>0.5 0.65 0.1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.03 0.03 0.03</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.03 0.03 0.03</size></box></geometry>
+          <material>
+            <ambient>0.3 0.5 0.3 1</ambient>
+            <diffuse>0.35 0.55 0.35 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="ore_cuboid_2">
+      <static>false</static>
+      <pose>0.5 0.58 0.1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><box><size>0.06 0.03 0.03</size></box></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><box><size>0.06 0.03 0.03</size></box></geometry>
+          <material>
+            <ambient>0.5 0.5 0.3 1</ambient>
+            <diffuse>0.55 0.55 0.35 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <model name="ore_cylinder_2">
+      <static>false</static>
+      <pose>0.5 0.72 0.1 0 0 0</pose>
+      <link name="link">
+        <collision name="collision">
+          <geometry><cylinder><radius>0.015</radius><length>0.045</length></cylinder></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><cylinder><radius>0.015</radius><length>0.045</length></cylinder></geometry>
+          <material>
+            <ambient>0.3 0.3 0.5 1</ambient>
+            <diffuse>0.35 0.35 0.55 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ============================================ -->
+    <!-- 任务卡片（贴在围挡上）                        -->
+    <!-- ============================================ -->
+    <!-- 任务一卡片: 离地面300mm, 离资源库水平100mm -->
+    <model name="task_card_1">
+      <static>true</static>
+      <pose>-1.95 0.8 0.3 0 1.5708 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.148 0.002 0.148</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 任务二卡片 -->
+    <model name="task_card_2">
+      <static>true</static>
+      <pose>-1.95 0.35 0.3 0 1.5708 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.148 0.002 0.148</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- 任务三卡片 -->
+    <model name="task_card_3">
+      <static>true</static>
+      <pose>-1.95 -0.1 0.3 0 1.5708 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry><box><size>0.148 0.002 0.148</size></box></geometry>
+          <material>
+            <ambient>1 1 1 1</ambient>
+            <diffuse>1 1 1 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+  </world>
+</sdf>
