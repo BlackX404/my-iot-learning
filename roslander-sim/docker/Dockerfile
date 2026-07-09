@@ -65,6 +65,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-noetic-joy \
     ros-noetic-teleop-twist-keyboard \
     ros-noetic-rviz \
+    ros-noetic-robot-state-publisher \
+    ros-noetic-laser-filters \
     && rm -rf /var/lib/apt/lists/*
 
 # ============================================================

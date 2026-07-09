@@ -15,4 +15,19 @@ else
     echo "工作空间尚未编译，请运行: cd /root/ros_ws && catkin build"
 fi
 
+# ============================================================
+# ROS 网络配置
+# ============================================================
+export ROS_IP=localhost
+export ROS_MASTER_URI=http://localhost:11311
+export ROS_HOSTNAME=localhost
+
+# ============================================================
+# ROSLander 仿真环境变量
+# ============================================================
+export ROBOT_HOST=robot_1
+export ROBOT_MASTER=robot_1
+export MACHINE_TYPE=ROSLanderMecanum
+export LIDAR_TYPE=S2L
+
 exec "$@"
